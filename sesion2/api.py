@@ -11,7 +11,7 @@ URL = "https://pokeapi.co/api/v2/pokemon/"
 # PUT: Cambia o actualiza por completo un dato que ya existe.
 # DELETE: Borra un recurso del servidor.
 
-respuesta = requests.get(URL)
+
 
 # HTTP response status codes indicate whether a specific HTTP request
 # has been successfully completed. Responses are grouped in five classes:
@@ -21,18 +21,28 @@ respuesta = requests.get(URL)
 # Client error responses (400 – 499)
 # Server error responses (500 – 599)
 
+# definir funcion consulta
+def consulta(pokemon):
+    respuesta = requests.get(URL + pokemon)
+    datos = respuesta.json()
+    st.text(datos)
+
 
 st.title("Consumo de APi")
 
 st.header("Ejemplo de consumo de datos api pokemon")
 
-st.text(f"Status code API {respuesta}")
-
-
-#cambiar respuesta a formato json
-datos = respuesta.json()
-
-st.text(f"Datos JSON {datos}")
+#st.text(f"Status code API {respuesta}")
 
 # Intension consultar mediante entrada los datos de un pokemon
+with st.form("Formulario de busqueda Pokemon"):
+    pokemon = st.text_input("Escribe el nombre de un pokemon: ")
+    conpokemon = st.form_submit_button("Consultar")
+
+    if conpokemon:
+        consulta(pokemon)
+
+
+    
+
 
