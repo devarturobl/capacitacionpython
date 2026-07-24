@@ -23,9 +23,27 @@ URL = "https://pokeapi.co/api/v2/pokemon/"
 
 # definir funcion consulta
 def consulta(pokemon):
-    respuesta = requests.get(URL + pokemon)
+    #USAMOS lower para convertir en minusculas el texto y strip para eliminar espacios en blanco
+    respuesta = requests.get(URL + pokemon.lower().strip())
+
+    #verificamos respuesta y en caso de ser error mandamos este mensaje
+    if respuesta.status_code != 200:
+        st.error(f"¡No se encontró el pokemon: '{pokemon}'! Intenta con otro nombre.", icon="🚨")
+        return
+    
     datos = respuesta.json()
-    st.text(datos)
+
+    #Datos para la card
+    nombre = datos["name"].capitalize()
+    hp = datos["stats"][0]["base_stat"]  # El primer stat suele ser HP
+    totalm = len(datos['moves'])
+    st.header(f"{totalm} Movimientos de {pokemon}")
+    url_imagen = datos["sprites"]["other"]["dream_world"]["front_default"]
+    #url_imagen = url_imagen['forms']['url']
+    st.image(url_imagen, width=400)
+    for move in datos['moves']:
+        st.text(f"Movimiento: {move["move"]["name"]}")
+
 
 
 st.title("Consumo de APi")
